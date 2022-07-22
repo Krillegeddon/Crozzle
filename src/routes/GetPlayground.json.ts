@@ -1,4 +1,5 @@
 import { Grid } from "$lib/PlayGround";
+import { allWordsSE } from "$lib/se";
 import type { RequestHandler } from "@sveltejs/kit";
 import fs from 'fs'
 
@@ -62,6 +63,8 @@ function IsValidHorizontal(word: string): boolean {
 }
 
 function GetHorizontalWord(allWords: Array<string>): string {
+    console.log("GetHorizontalWord");
+    console.log(allWords.length);
     var startIndex = Math.round(Math.random() * allWords.length);
     for (var i = startIndex; i < allWords.length; i++) {
         var word = allWords[i].trim();
@@ -133,12 +136,20 @@ function GetPlayGround(allWords: Array<string>): Grid {
 
 export const GET: RequestHandler = async (event) => {
     var resp: Array<any> = [];
-    var allWordsStr = fs.readFileSync("C:\\_Git\\Crozzle\\src\\lib\\se_utf8.txt", "utf-8").toString();
 
-    var allWords = allWordsStr.split("\n");
+    // var allWordsStr = fs.readFileSync("C:\\_Git\\Crozzle\\src\\lib\\se_utf8.txt", "utf-8").toString();
+    // var allWords = allWordsStr.split("\n");
+    // var bb = ""
+    // for (var i = 0; i < allWords.length; i++) {
+    //     if (bb != "") bb += ",\n";
+    //     bb += "    \"" + allWords[i].trim() + "\"";
+    // }
+    // bb = "export let allWordsSE = [" + bb;
+    // bb += "]";
+    // fs.writeFileSync("C:\\_Git\\Crozzle\\src\\lib\\se.ts", bb);
 
     while (true) {
-        var pg = GetPlayGround(allWords);
+        var pg = GetPlayGround(allWordsSE);
 
         var w = "";
         for (var y = 0; y < 20; y++) {
