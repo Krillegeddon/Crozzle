@@ -1,16 +1,53 @@
 <script lang="ts">
 	import { Grid } from '$lib/PlayGround';
-	var grid = new Grid();
-	grid.populateGrid();
-	console.log(grid);
+
+	var grid: Grid;
+	var isSetup: boolean = false;
+
+	async function GetGrid() {
+		var url = 'http://localhost:5173/GetPlayground.json';
+
+		const f = await fetch(url, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json; charset=utf-8'
+			}
+		});
+
+		let r = await f.text();
+
+		var grid2 = new Grid();
+
+		console.log('Frontend:\n' + r);
+
+		var w = '';
+		for (var y = 0; y < 20; y++) {
+			for (var x = 0; x < 20; x++) {
+				if (r.charAt(x + y * 21) != ' ') grid2.setLetter(x, y, r.charAt(x + y * 21).toUpperCase());
+				w += r.charAt(x + y * 21);
+			}
+			w += '\n';
+		}
+		grid = grid2;
+	}
+
+	GetGrid();
 
 	var columns = new Array<number>();
 	var rows = new Array<number>();
-	for (let i = 0; i <= grid.maxX; i++) {
-		columns.push(i);
-	}
-	for (let i = 0; i <= grid.maxY; i++) {
-		rows.push(i);
+
+	$: Setup(grid);
+
+	function Setup(gridx: Grid) {
+		if (gridx == null) return;
+		if (isSetup) return;
+		for (let i = 0; i <= grid.maxX; i++) {
+			columns.push(i);
+		}
+		for (let i = 0; i <= grid.maxY; i++) {
+			rows.push(i);
+		}
+		isSetup = true;
 	}
 
 	function isLetterBox(column: number, row: number, selectedLetters: string): boolean {
@@ -27,59 +64,73 @@
 		return false;
 	}
 
-	function getFaultyLetters(selectedLetters: string): Array<string> {
-		var ret = new Array<string>();
-		for (var i = 0; i < selectedLetters.length; i++) {
-			if (!grid.isCorrectLetter(selectedLetters.charAt(i).toUpperCase()))
-				ret.push(selectedLetters.charAt(i).toUpperCase());
-		}
+	function handleKeydown(event: any) {
+		if (grid.isValidLetter(event.key)) grid.selectedLetters += event.key;
+	}
 
-		return ret;
+	function addLetter(letter: string) {
+		console.log(letter);
+		if (grid.isValidLetter(letter)) grid.selectedLetters += letter;
 	}
 </script>
 
-<h1>CROZZLE</h1>
+<svelte:window on:keydown={handleKeydown} />
 
-<table>
-	{#each rows as row}
+{#if grid}
+	<!-- <input type="text" bind:value={grid.selectedLetters} /> -->
+	<table style="width:100%">
 		<tr>
-			{#each columns as column}
-				<td
-					class:letterbox={isLetterBox(column, row, grid.selectedLetters)}
-					class:letterbox-perfect={isPerfect(column, row, grid.selectedLetters)}
-				>
-					{#if isPerfect(column, row, grid.selectedLetters)}
-						{grid.getLetter(column, row) ?? ''}
-					{/if}
-				</td>{/each}
-		</tr>
-	{/each}
-</table>
-<div style="width:300px">
-	{#each grid.getValidLetters() as validLetter}
-		<div
-			class="letterbox-keyboard"
-			class:letterbox-perfect={grid.isCorrectLetter(validLetter)}
-			class:letterbox-error={grid.isFaultyLetter(validLetter)}
-		>
-			{validLetter}
-		</div>
-	{/each}
-</div>
+			<td align="center" style="align:center;">
+				<h1>CROZZLE</h1>
 
-<input type="text" bind:value={grid.selectedLetters} />
+				<table>
+					{#each rows as row}
+						<tr>
+							{#each columns as column}
+								<td
+									class:letterbox={isLetterBox(column, row, grid.selectedLetters)}
+									class:letterbox-perfect={isPerfect(column, row, grid.selectedLetters)}
+								>
+									{#if isPerfect(column, row, grid.selectedLetters)}
+										{grid.getLetter(column, row) ?? ''}
+									{/if}
+								</td>{/each}
+						</tr>
+					{/each}
+				</table>
+				<div style="width:300px;margin-top:40px;">
+					{#each grid.getValidLetters() as validLetter}
+						<div
+							style="cursor:pointer"
+							on:click={() => addLetter(validLetter)}
+							class="letterbox-keyboard"
+							class:letterbox-perfect={grid.isCorrectLetter(grid.selectedLetters, validLetter)}
+							class:letterbox-error={grid.isFaultyLetter(grid.selectedLetters, validLetter)}
+						>
+							{validLetter}
+						</div>
+					{/each}
+				</div>
+			</td></tr
+		>
+	</table>
+{/if}
 
 <style>
+	* {
+		font-family: sans-serif;
+	}
 	.letterbox {
 		border: 1px silver solid;
-		height: 20px;
-		width: 20px;
+		height: 40px;
+		width: 40px;
+		font-size: 30px;
 	}
 	.letterbox-perfect {
 		border: 1px silver solid;
 		background-color: lightgreen;
-		height: 20px;
-		width: 20px;
+		height: 40px;
+		width: 40px;
 		text-align: center;
 	}
 	.letterbox-error {
@@ -87,35 +138,26 @@
 		border: 1px silver solid;
 		background-color: red;
 		color: white;
-		height: 20px;
-		width: 20px;
+		height: 40px;
+		width: 40px;
 		text-align: center;
 	}
 	.letterbox-keyboard {
 		display: inline-block;
 		border: 1px silver solid;
-		height: 20px;
-		width: 20px;
+		height: 30px;
+		width: 30px;
 		text-align: center;
 		margin: 2px;
+		font-size: 30px;
 	}
 	.letterbox-keyboard-perfect {
-		display: inline-block;
 		border: 1px silver solid;
 		background-color: lightgreen;
-		height: 20px;
-		width: 20px;
-		text-align: center;
-		margin: 2px;
 	}
 	.letterbox-keyboard-error {
-		display: inline-block;
 		border: 1px silver solid;
 		background-color: red;
 		color: white;
-		height: 20px;
-		width: 20px;
-		text-align: center;
-		margin: 2px;
 	}
 </style>
