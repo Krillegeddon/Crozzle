@@ -36,8 +36,6 @@
 		var r = GetPlayground();
 		var grid2 = new Grid();
 
-		console.log('Frontend:\n' + r);
-
 		var w = '';
 		for (var y = 0; y < 20; y++) {
 			for (var x = 0; x < 20; x++) {
@@ -87,7 +85,6 @@
 	}
 
 	function addLetter(letter: string) {
-		console.log(letter);
 		if (grid.isValidLetter(letter)) grid.selectedLetters += letter;
 	}
 </script>
@@ -135,46 +132,57 @@
 {/if}
 
 <style>
-	* {
+	body {
 		font-family: sans-serif;
+		background-color: #111111;
+		color: white;
+	}
+	* {
+		color: silver;
+		font-family: sans-serif;
+		background-color: #111111;
 	}
 	.letterbox {
-		border: 1px silver solid;
-		height: 40px;
-		width: 40px;
-		font-size: 30px;
+		border: 1px #555555 solid;
+		color: white;
+		height: 20px;
+		width: 20px;
+		font-size: 18px;
+		color: white;
 	}
 	.letterbox-perfect {
-		border: 1px silver solid;
-		background-color: lightgreen;
-		height: 40px;
-		width: 40px;
+		border: 1px #555555 solid;
+		color: white;
+		background-color: green;
+		height: 20px;
+		width: 20px;
 		text-align: center;
 	}
 	.letterbox-error {
 		display: inline-block;
-		border: 1px silver solid;
+		border: 1px #555555 solid;
 		background-color: red;
 		color: white;
-		height: 40px;
-		width: 40px;
+		height: 20px;
+		width: 20px;
 		text-align: center;
 	}
 	.letterbox-keyboard {
 		display: inline-block;
-		border: 1px silver solid;
-		height: 30px;
-		width: 30px;
+		border: 1px #555555 solid;
+		height: 20px;
+		width: 20px;
 		text-align: center;
 		margin: 2px;
-		font-size: 30px;
+		font-size: 20px;
+		color: white;
 	}
 	.letterbox-keyboard-perfect {
-		border: 1px silver solid;
+		border: 1px #555555 solid;
 		background-color: lightgreen;
 	}
 	.letterbox-keyboard-error {
-		border: 1px silver solid;
+		border: 1px #555555 solid;
 		background-color: red;
 		color: white;
 	}

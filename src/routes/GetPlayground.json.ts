@@ -144,6 +144,7 @@ export function GetPlayground() {
             w += "\n";
         }
 
+        console.log("So you wanted to cheat, then you have the correct answer here! :-)");
         console.log("BACKEND: \n" + w);
 
         if (pg.maxX > 0) {
