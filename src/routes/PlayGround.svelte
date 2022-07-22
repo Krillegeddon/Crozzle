@@ -1,21 +1,39 @@
 <script lang="ts">
 	import { Grid } from '$lib/PlayGround';
+	import { GetPlayground } from './GetPlayground.json';
 
 	var grid: Grid;
 	var isSetup: boolean = false;
 
-	async function GetGrid() {
-		var url = 'http://localhost:5173/GetPlayground.json';
+	// async function GetGrid() {
+	// 	var url = 'http://localhost:5173/GetPlayground.json';
 
-		const f = await fetch(url, {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json; charset=utf-8'
-			}
-		});
+	// 	const f = await fetch(url, {
+	// 		method: 'GET',
+	// 		headers: {
+	// 			'Content-Type': 'application/json; charset=utf-8'
+	// 		}
+	// 	});
 
-		let r = await f.text();
+	// 	let r = await f.text();
 
+	// 	var grid2 = new Grid();
+
+	// 	console.log('Frontend:\n' + r);
+
+	// 	var w = '';
+	// 	for (var y = 0; y < 20; y++) {
+	// 		for (var x = 0; x < 20; x++) {
+	// 			if (r.charAt(x + y * 21) != ' ') grid2.setLetter(x, y, r.charAt(x + y * 21).toUpperCase());
+	// 			w += r.charAt(x + y * 21);
+	// 		}
+	// 		w += '\n';
+	// 	}
+	// 	grid = grid2;
+	// }
+
+	function GetGrid() {
+		var r = GetPlayground();
 		var grid2 = new Grid();
 
 		console.log('Frontend:\n' + r);

@@ -10,7 +10,6 @@ function CountCommonLetters(one: string, two: string): number {
         for (var j = 0; j < two.length; j++) {
             if (one[i] == two[j]) {
                 if (alreadyCountedLetters.find(p => p == one[i])) {
-                    //console.log(one[i] + " already counted!");
                     continue;
                 }
 
@@ -56,20 +55,16 @@ function GetVerticalWord(letterToMatch: string, horizontalWord: string, allWords
 
 function IsValidHorizontal(word: string): boolean {
     if (word.length >= 7 && word.length <= 8) {
-        //console.log("IsValidHoriz: " + word + ", " + word.length);
         return true;
     }
     return false;
 }
 
 function GetHorizontalWord(allWords: Array<string>): string {
-    console.log("GetHorizontalWord");
-    console.log(allWords.length);
     var startIndex = Math.round(Math.random() * allWords.length);
     for (var i = startIndex; i < allWords.length; i++) {
         var word = allWords[i].trim();
         if (IsValidHorizontal(word)) {
-            //console.log("GetHorizontalWord: " + word + ", " + word.length);
             return word;
         }
     }
@@ -95,9 +90,6 @@ function GetPlayGround(allWords: Array<string>): Grid {
 
     var horizontalWord = GetHorizontalWord(allWords);
 
-    // console.log("--------------------------");
-    // console.log(horizontalWord + "***");
-
     var vw1 = GetVerticalWord(horizontalWord.charAt(0), horizontalWord, allWords);
     var vw2 = GetVerticalWord(horizontalWord.charAt(2), horizontalWord, allWords);
     var vw3 = GetVerticalWord(horizontalWord.charAt(4), horizontalWord, allWords);
@@ -117,9 +109,6 @@ function GetPlayGround(allWords: Array<string>): Grid {
     if (i3 > maxIndex) maxIndex = i3;
     if (i4 > maxIndex) maxIndex = i4;
 
-    // console.log(i1 + ", " + i2 + ", " + i3 + ", " + i4);
-    // console.log(maxIndex);
-
     PutVeritcalWord(vw1, 0, maxIndex - i1, grid);
     PutVeritcalWord(vw2, 2, maxIndex - i2, grid);
     PutVeritcalWord(vw3, 4, maxIndex - i3, grid);
@@ -127,14 +116,10 @@ function GetPlayGround(allWords: Array<string>): Grid {
 
     PutHorizontalWord(horizontalWord, maxIndex, grid);
 
-    //grid.maxX = 10;
-    //console.log(grid);
-
     return grid;
 }
 
-
-export const GET: RequestHandler = async (event) => {
+export function GetPlayground() {
     var resp: Array<any> = [];
 
     // var allWordsStr = fs.readFileSync("C:\\_Git\\Crozzle\\src\\lib\\se_utf8.txt", "utf-8").toString();
@@ -159,17 +144,45 @@ export const GET: RequestHandler = async (event) => {
             w += "\n";
         }
 
-        // console.log(w);
         console.log("BACKEND: \n" + w);
 
-        console.log(CountCommonLetters("eeeeeee", "e"));
-
-
         if (pg.maxX > 0) {
-            return {
-                status: 200,
-                body: w
-            }
+            return w;
         }
     }
-};
+}
+
+
+// export const GET: RequestHandler = async (event) => {
+//     var resp: Array<any> = [];
+
+//     // var allWordsStr = fs.readFileSync("C:\\_Git\\Crozzle\\src\\lib\\se_utf8.txt", "utf-8").toString();
+//     // var allWords = allWordsStr.split("\n");
+//     // var bb = ""
+//     // for (var i = 0; i < allWords.length; i++) {
+//     //     if (bb != "") bb += ",\n";
+//     //     bb += "    \"" + allWords[i].trim() + "\"";
+//     // }
+//     // bb = "export let allWordsSE = [" + bb;
+//     // bb += "]";
+//     // fs.writeFileSync("C:\\_Git\\Crozzle\\src\\lib\\se.ts", bb);
+
+//     while (true) {
+//         var pg = GetPlayGround(allWordsSE);
+
+//         var w = "";
+//         for (var y = 0; y < 20; y++) {
+//             for (var x = 0; x < 20; x++) {
+//                 w += pg.getLetter(x, y) ?? " ";
+//             }
+//             w += "\n";
+//         }
+
+//         if (pg.maxX > 0) {
+//             return {
+//                 status: 200,
+//                 body: w
+//             }
+//         }
+//     }
+// };
