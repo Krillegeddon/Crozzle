@@ -73,6 +73,7 @@ function GetVerticalWord(letterToMatch: string, horizontalWord: string, allWords
 function IsValidHorizontal(word: string): boolean {
     if (!IsContainingOnlyValidLetters(word))
         return false;
+    //if (word.length == 8) return true;
     if (word.length >= 7 && word.length <= 8) {
         return true;
     }
@@ -108,11 +109,17 @@ function GetPlayGround(allWords: Array<string>): Grid {
     grid.maxX = 0;
 
     var horizontalWord = GetHorizontalWord(allWords);
+    //var horizontalWord = "TILLGÅNG";
+    //console.log("GetPlayGround");
 
     var vw1 = GetVerticalWord(horizontalWord.charAt(0), horizontalWord, allWords);
     var vw2 = GetVerticalWord(horizontalWord.charAt(2), horizontalWord, allWords);
     var vw3 = GetVerticalWord(horizontalWord.charAt(4), horizontalWord, allWords);
     var vw4 = GetVerticalWord(horizontalWord.charAt(6), horizontalWord, allWords);
+    // var vw1 = "LOGISKT";
+    // var vw2 = "ÄNDLIG";
+    // var vw3 = "GLA";
+    // var vw4 = "TRÄNGS";
 
     var i1 = vw1.indexOf(horizontalWord.charAt(0));
     var i2 = vw2.indexOf(horizontalWord.charAt(2));
@@ -167,7 +174,7 @@ export const GET: RequestHandler = async (event) => {
     // var resp: Array<any> = [];
 
     // console.log("LÄSA FIL!");
-    // var allWordsStr = fs.readFileSync("C:\\_Git\\Crozzle\\src\\lib\\se2.txt", "utf-8").toString();
+    // var allWordsStr = fs.readFileSync("C:\\_Git\\Crozzle\\src\\lib\\se_utf8.txt", "utf-8").toString();
     // var allWords = allWordsStr.split("\n");
     // console.log(allWords.length);
     // var bb = ""
@@ -177,7 +184,7 @@ export const GET: RequestHandler = async (event) => {
     // }
     // bb = "export let allWordsSE = [" + bb;
     // bb += "]";
-    // fs.writeFileSync("C:\\_Git\\Crozzle\\src\\lib\\se2.ts", bb);
+    // fs.writeFileSync("C:\\_Git\\Crozzle\\src\\lib\\se3.ts", bb);
 
 
 
