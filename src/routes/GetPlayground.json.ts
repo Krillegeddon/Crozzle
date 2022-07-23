@@ -191,6 +191,10 @@ export const GET: RequestHandler = async (event) => {
     while (true) {
         var pg = GetPlayGround(allWordsSE);
 
+        if (pg.maxX <= 0) {
+            continue;
+        }
+
         var w = "";
         for (var y = 0; y < 20; y++) {
             for (var x = 0; x < 20; x++) {
@@ -200,12 +204,11 @@ export const GET: RequestHandler = async (event) => {
         }
 
         var da = { s: w };
+        console.log("endpoint:" + da.s);
 
-        if (pg.maxX > 0) {
-            return {
-                status: 200,
-                body: JSON.stringify(da)
-            }
+        return {
+            status: 200,
+            body: JSON.stringify(da)
         }
     }
 };

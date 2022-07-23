@@ -9,22 +9,26 @@
 	var showDebug: boolean = false;
 
 	async function FetGrid(): Promise<string> {
-		console.log($page.url.href);
-		//const f = await fetch('http://localhost:5173/GetPlayground.json', {
-		var url = $page.url.href + 'GetPlayground.json';
-		console.log(url);
-		const f = await fetch(url, {
-			method: 'GET',
-			headers: {}
-		});
+		try {
+			console.log($page.url.href);
+			//const f = await fetch('http://localhost:5173/GetPlayground.json', {
+			var url = $page.url.href + 'GetPlayground.json';
+			console.log(url);
+			const f = await fetch(url, {
+				method: 'GET',
+				headers: {}
+			});
 
-		//				'Content-Type': 'application/json; charset=utf-8'
+			//				'Content-Type': 'application/json; charset=utf-8'
 
-		let r = await f.json();
-		console.log('So you wanna cheat? Well, here is the correct puzzle: :-)');
-		console.log(r.s);
-		gridText = r.s;
-		return r.s;
+			let r = await f.json();
+			console.log('So you wanna cheat? Well, here is the correct puzzle: :-)');
+			console.log(r.s);
+			gridText = r.s;
+			return r.s;
+		} catch (e) {
+			return 'fel';
+		}
 	}
 
 	async function GetGrid() {
