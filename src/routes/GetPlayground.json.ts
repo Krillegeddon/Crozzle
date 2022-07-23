@@ -198,10 +198,12 @@ export const GET: RequestHandler = async (event) => {
             w += "\n";
         }
 
+        var da = { s: w };
+
         if (pg.maxX > 0) {
             return {
                 status: 200,
-                body: w
+                body: JSON.stringify(da)
             }
         }
     }

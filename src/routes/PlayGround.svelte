@@ -1,14 +1,32 @@
 <script lang="ts">
 	import { Grid } from '$lib/PlayGround';
-	import { select_multiple_value } from 'svelte/internal';
-	import { GetPlayground } from './GetPlayground.json';
-
+	import { page } from '$app/stores';
 	var grid: Grid;
 	var isSetup: boolean = false;
 	var showHelp = false;
 
-	function GetGrid() {
-		var r = GetPlayground();
+	async function FetGrid(): Promise<string> {
+		console.log($page.url.href);
+		//const f = await fetch('http://localhost:5173/GetPlayground.json', {
+		var url = $page.url.href + 'GetPlayground.json';
+		console.log(url);
+		const f = await fetch(url, {
+			method: 'GET',
+			headers: {}
+		});
+
+		//				'Content-Type': 'application/json; charset=utf-8'
+
+		let r = await f.json();
+		console.log('So you wanna cheat? Well, here is the correct puzzle: :-)');
+		console.log(r.s);
+		return r.s;
+	}
+
+	async function GetGrid() {
+		//var r = GetPlayground();
+		var r = await FetGrid();
+
 		var grid2 = new Grid();
 
 		var w = '';
