@@ -138,46 +138,38 @@ function GetPlayGround(allWords: Array<string>): Grid {
     return grid;
 }
 
-export function GetPlayground() {
-    var resp: Array<any> = [];
+// export function GetPlayground() {
 
-    // var allWordsStr = fs.readFileSync("C:\\_Git\\Crozzle\\src\\lib\\se_utf8.txt", "utf-8").toString();
-    // var allWords = allWordsStr.split("\n");
-    // var bb = ""
-    // for (var i = 0; i < allWords.length; i++) {
-    //     if (bb != "") bb += ",\n";
-    //     bb += "    \"" + allWords[i].trim() + "\"";
-    // }
-    // bb = "export let allWordsSE = [" + bb;
-    // bb += "]";
-    // fs.writeFileSync("C:\\_Git\\Crozzle\\src\\lib\\se.ts", bb);
+//     while (true) {
+//         var pg = GetPlayGround(allWordsSE);
 
-    while (true) {
-        var pg = GetPlayGround(allWordsSE);
+//         var w = "";
+//         for (var y = 0; y < 20; y++) {
+//             for (var x = 0; x < 20; x++) {
+//                 w += pg.getLetter(x, y) ?? " ";
+//             }
+//             w += "\n";
+//         }
 
-        var w = "";
-        for (var y = 0; y < 20; y++) {
-            for (var x = 0; x < 20; x++) {
-                w += pg.getLetter(x, y) ?? " ";
-            }
-            w += "\n";
-        }
+//         console.log("So you wanted to cheat, then you have the correct answer here! :-)");
+//         console.log("BACKEND: \n" + w);
 
-        console.log("So you wanted to cheat, then you have the correct answer here! :-)");
-        console.log("BACKEND: \n" + w);
-
-        if (pg.maxX > 0) {
-            return w;
-        }
-    }
-}
+//         if (pg.maxX > 0) {
+//             return w;
+//         }
+//     }
+// }
 
 
 export const GET: RequestHandler = async (event) => {
-    var resp: Array<any> = [];
+    // var resp: Array<any> = [];
 
-    // var allWordsStr = fs.readFileSync("C:\\_Git\\Crozzle\\src\\lib\\se_utf8.txt", "utf-8").toString();
+    // var resp: Array<any> = [];
+
+    // console.log("LÄSA FIL!");
+    // var allWordsStr = fs.readFileSync("C:\\_Git\\Crozzle\\src\\lib\\se2.txt", "utf-8").toString();
     // var allWords = allWordsStr.split("\n");
+    // console.log(allWords.length);
     // var bb = ""
     // for (var i = 0; i < allWords.length; i++) {
     //     if (bb != "") bb += ",\n";
@@ -185,7 +177,9 @@ export const GET: RequestHandler = async (event) => {
     // }
     // bb = "export let allWordsSE = [" + bb;
     // bb += "]";
-    // fs.writeFileSync("C:\\_Git\\Crozzle\\src\\lib\\se.ts", bb);
+    // fs.writeFileSync("C:\\_Git\\Crozzle\\src\\lib\\se2.ts", bb);
+
+
 
     while (true) {
         var pg = GetPlayGround(allWordsSE);
