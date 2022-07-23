@@ -65,17 +65,53 @@ export class Grid {
 
 
     setLetter(x: number, y: number, letter: string) {
+        // if (!this.isCorrectLetter("dummy", letter)) {
+        //     this.correctLetters.push(letter);
+        // }
+
         if (x > this.maxX) this.maxX = x;
         if (y > this.maxY) this.maxY = y;
         this.letters[x + y * 20] = letter;
 
-        if (!this.isCorrectLetter("dummy", letter))
-            this.correctLetters.push(letter);
+        for (var i = 0; i < this.correctLetters.length; i++) {
+            if (this.correctLetters[i].toUpperCase() == letter.toUpperCase())
+                return;
+        }
+        this.correctLetters.push(letter.toUpperCase());
     }
 
     getLetter(x: number, y: number): string {
         return (this.letters[x + y * 20]);
     }
 
+    getNumberOfFails(bb: any) {
+        var numFails = 0;
+        for (var i = 0; i < this.selectedLetters.length; i++) {
+            if (this.isFaultyLetter("fit", this.selectedLetters.charAt(i))) {
+                numFails++;
+            }
+        }
+        return numFails;
+    }
+
+    isLetterInSelected(letter: string): boolean {
+        for (var i = 0; i < this.selectedLetters.length; i++) {
+            if (letter.toUpperCase() == this.selectedLetters.charAt(i)) return true;
+        }
+        return false;
+    }
+
+
+    isSolved(bb: any): boolean {
+        for (var i = 0; i < this.correctLetters.length; i++) {
+            if (!this.isLetterInSelected(this.correctLetters[i])) return false;
+        }
+
+        return true;
+    }
+
+    isFailed(bb: any): boolean {
+        return this.getNumberOfFails("aaa") >= 4;
+    }
 
 }

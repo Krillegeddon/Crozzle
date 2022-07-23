@@ -1,36 +1,10 @@
 <script lang="ts">
 	import { Grid } from '$lib/PlayGround';
+	import { select_multiple_value } from 'svelte/internal';
 	import { GetPlayground } from './GetPlayground.json';
 
 	var grid: Grid;
 	var isSetup: boolean = false;
-
-	// async function GetGrid() {
-	// 	var url = 'http://localhost:5173/GetPlayground.json';
-
-	// 	const f = await fetch(url, {
-	// 		method: 'GET',
-	// 		headers: {
-	// 			'Content-Type': 'application/json; charset=utf-8'
-	// 		}
-	// 	});
-
-	// 	let r = await f.text();
-
-	// 	var grid2 = new Grid();
-
-	// 	console.log('Frontend:\n' + r);
-
-	// 	var w = '';
-	// 	for (var y = 0; y < 20; y++) {
-	// 		for (var x = 0; x < 20; x++) {
-	// 			if (r.charAt(x + y * 21) != ' ') grid2.setLetter(x, y, r.charAt(x + y * 21).toUpperCase());
-	// 			w += r.charAt(x + y * 21);
-	// 		}
-	// 		w += '\n';
-	// 	}
-	// 	grid = grid2;
-	// }
 
 	function GetGrid() {
 		var r = GetPlayground();
@@ -81,11 +55,26 @@
 	}
 
 	function handleKeydown(event: any) {
-		if (grid.isValidLetter(event.key)) grid.selectedLetters += event.key;
+		if (grid.isFailed(letter)) return;
+		if (grid.isSolved(letter)) return;
+		if (grid.isValidLetter(event.key)) {
+			var letter = event.key.toUpperCase();
+			for (var i = 0; i < grid.selectedLetters.length; i++) {
+				if (grid.selectedLetters.charAt(i).toUpperCase() == letter.toUpperCase()) return; //Already added
+			}
+			grid.selectedLetters += letter.toUpperCase();
+		}
 	}
 
 	function addLetter(letter: string) {
-		if (grid.isValidLetter(letter)) grid.selectedLetters += letter;
+		if (grid.isFailed(letter)) return;
+		if (grid.isSolved(letter)) return;
+		if (grid.isValidLetter(letter)) {
+			for (var i = 0; i < grid.selectedLetters.length; i++) {
+				if (grid.selectedLetters.charAt(i).toUpperCase() == letter.toUpperCase()) return; //Already added
+			}
+			grid.selectedLetters += letter.toUpperCase();
+		}
 	}
 </script>
 
@@ -126,8 +115,22 @@
 						</div>
 					{/each}
 				</div>
-			</td></tr
-		>
+				{#if grid.isFailed(grid.selectedLetters)}
+					<div>
+						<br />
+						Attans, du förlorade!<br /><br />
+						<button on:click={() => (grid.selectedLetters = '')}>Spela igen</button>
+					</div>
+				{/if}
+				{#if grid.isSolved(grid.selectedLetters)}
+					<div>
+						<br />
+						Grattis, du klarade det!<br /><br />
+						<button on:click={() => GetGrid()}>Spela igen</button>
+					</div>
+				{/if}
+			</td>
+		</tr>
 	</table>
 {/if}
 
@@ -138,7 +141,7 @@
 		color: white;
 	}
 	* {
-		color: silver;
+		color: white;
 		font-family: sans-serif;
 		background-color: #111111;
 	}
@@ -170,11 +173,11 @@
 	.letterbox-keyboard {
 		display: inline-block;
 		border: 1px #555555 solid;
-		height: 20px;
-		width: 20px;
+		height: 30px;
+		width: 30px;
 		text-align: center;
 		margin: 2px;
-		font-size: 20px;
+		font-size: 30px;
 		color: white;
 	}
 	.letterbox-keyboard-perfect {
