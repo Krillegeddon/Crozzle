@@ -3,6 +3,21 @@ import { allWordsSE } from "$lib/se";
 import type { RequestHandler } from "@sveltejs/kit";
 import fs from 'fs'
 
+const validLetters: string = "abcdefghijklmnopqrstuvwxyzåäö";
+function IsValidLetter(letter: string): boolean {
+    for (var i = 0; i < validLetters.length; i++) {
+        if (validLetters.charAt(i).toUpperCase() == letter.toUpperCase()) return true;
+    }
+    return false;
+}
+
+function IsContainingOnlyValidLetters(word: string): boolean {
+    for (var i = 0; i < word.length; i++) {
+        if (!IsValidLetter(word.charAt(i))) return false;
+    }
+    return true;
+}
+
 function CountCommonLetters(one: string, two: string): number {
     var count = 0;
     var alreadyCountedLetters = new Array<string>();
@@ -38,6 +53,8 @@ function GetVerticalWord(letterToMatch: string, horizontalWord: string, allWords
             continue;
         if (!IsLetterInWord(letterToMatch, word))
             continue;
+        if (!IsContainingOnlyValidLetters(word))
+            continue;
 
         var numCommonLetters = CountCommonLetters(horizontalWord, word);
         var minCommonLetters = 0;
@@ -54,6 +71,8 @@ function GetVerticalWord(letterToMatch: string, horizontalWord: string, allWords
 }
 
 function IsValidHorizontal(word: string): boolean {
+    if (!IsContainingOnlyValidLetters(word))
+        return false;
     if (word.length >= 7 && word.length <= 8) {
         return true;
     }
