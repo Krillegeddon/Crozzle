@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Grid } from '$lib/PlayGround';
 	import { page } from '$app/stores';
+	import { browser, dev, prerendering } from '$app/env';
 	var grid: Grid;
 	var isSetup: boolean = false;
 	var showHelp = false;
@@ -32,6 +33,8 @@
 	}
 
 	async function GetGrid() {
+		console.log('GET GRID (' + browser + ')');
+
 		//var r = GetPlayground();
 		var r = await FetGrid();
 		//r = 'hej';
@@ -57,7 +60,7 @@
 		errorMessage = '';
 	}
 
-	GetGrid();
+	if (browser) GetGrid();
 
 	var columns = new Array<number>();
 	var rows = new Array<number>();

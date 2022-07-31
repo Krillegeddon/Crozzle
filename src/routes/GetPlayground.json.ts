@@ -109,22 +109,23 @@ function GetPlayGround(allWords: Array<string>): Grid {
     grid.maxX = 0;
 
     var horizontalWord = GetHorizontalWord(allWords);
-    //var horizontalWord = "TILLGÅNG";
+    //var horizontalWord = "blodkärl";
     //console.log("GetPlayGround");
 
     var vw1 = GetVerticalWord(horizontalWord.charAt(0), horizontalWord, allWords);
     var vw2 = GetVerticalWord(horizontalWord.charAt(2), horizontalWord, allWords);
     var vw3 = GetVerticalWord(horizontalWord.charAt(4), horizontalWord, allWords);
     var vw4 = GetVerticalWord(horizontalWord.charAt(6), horizontalWord, allWords);
-    // var vw1 = "LOGISKT";
-    // var vw2 = "ÄNDLIG";
-    // var vw3 = "GLA";
-    // var vw4 = "TRÄNGS";
+    // var vw1 = "åtbörd";
+    // var vw2 = "tobak";
+    // var vw3 = "förkyld";
+    // var vw4 = "grädde";
 
     var i1 = vw1.indexOf(horizontalWord.charAt(0));
     var i2 = vw2.indexOf(horizontalWord.charAt(2));
     var i3 = vw3.indexOf(horizontalWord.charAt(4));
     var i4 = vw4.indexOf(horizontalWord.charAt(6));
+
 
     if (i1 < 0 || i2 < 0 || i3 < 0 || i4 < 0) {
         return grid;
@@ -145,53 +146,19 @@ function GetPlayGround(allWords: Array<string>): Grid {
     return grid;
 }
 
-// export function GetPlayground() {
-
-//     while (true) {
-//         var pg = GetPlayGround(allWordsSE);
-
-//         var w = "";
-//         for (var y = 0; y < 20; y++) {
-//             for (var x = 0; x < 20; x++) {
-//                 w += pg.getLetter(x, y) ?? " ";
-//             }
-//             w += "\n";
-//         }
-
-//         console.log("So you wanted to cheat, then you have the correct answer here! :-)");
-//         console.log("BACKEND: \n" + w);
-
-//         if (pg.maxX > 0) {
-//             return w;
-//         }
-//     }
-// }
-
+import { browser, dev, prerendering } from '$app/env';
 
 export const GET: RequestHandler = async (event) => {
-    // var resp: Array<any> = [];
-
-    // var resp: Array<any> = [];
-
-    // console.log("LÄSA FIL!");
-    // var allWordsStr = fs.readFileSync("C:\\_Git\\Crozzle\\src\\lib\\se_utf8.txt", "utf-8").toString();
-    // var allWords = allWordsStr.split("\n");
-    // console.log(allWords.length);
-    // var bb = ""
-    // for (var i = 0; i < allWords.length; i++) {
-    //     if (bb != "") bb += ",\n";
-    //     bb += "    \"" + allWords[i].trim() + "\"";
-    // }
-    // bb = "export let allWordsSE = [" + bb;
-    // bb += "]";
-    // fs.writeFileSync("C:\\_Git\\Crozzle\\src\\lib\\se3.ts", bb);
+    console.log("Hej " + browser);
 
 
 
-    while (true) {
+    //while (true) {
+    for (var i = 0; i < 1000; i++) {
         var pg = GetPlayGround(allWordsSE);
 
         if (pg.maxX <= 0) {
+            console.log("KUNDE INTE HITTA");
             continue;
         }
 
