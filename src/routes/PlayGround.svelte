@@ -3,14 +3,14 @@
 	import { page } from '$app/stores';
 	import { browser, dev, prerendering } from '$app/env';
 	var grid: Grid;
-	var isSetup: boolean = false;
 	var showHelp = false;
-	var errorMessage = 'Loading';
+	var errorMessage = 'Loading2';
 	var gridText: string;
 	var showDebug: boolean = false;
 
 	async function FetGrid(): Promise<string> {
 		try {
+			console.log('FET GRID!');
 			console.log($page.url.href);
 			//const f = await fetch('http://localhost:5173/GetPlayground.json', {
 			var url = $page.url.href + 'GetPlayground.json';
@@ -37,7 +37,6 @@
 
 		//var r = GetPlayground();
 		var r = await FetGrid();
-		//r = 'hej';
 
 		if (r.length != 420) {
 			errorMessage = 'Something went wrong, try reloading the page';
@@ -56,6 +55,16 @@
 			}
 			w += '\n';
 		}
+		columns = new Array<number>();
+		rows = new Array<number>();
+
+		for (let i = 0; i <= grid2.maxX; i++) {
+			columns.push(i);
+		}
+		for (let i = 0; i <= grid2.maxY; i++) {
+			rows.push(i);
+		}
+
 		grid = grid2;
 		errorMessage = '';
 	}
@@ -64,20 +73,6 @@
 
 	var columns = new Array<number>();
 	var rows = new Array<number>();
-
-	$: Setup(grid);
-
-	function Setup(gridx: Grid) {
-		if (gridx == null) return;
-		if (isSetup) return;
-		for (let i = 0; i <= grid.maxX; i++) {
-			columns.push(i);
-		}
-		for (let i = 0; i <= grid.maxY; i++) {
-			rows.push(i);
-		}
-		isSetup = true;
-	}
 
 	function isLetterBox(column: number, row: number, selectedLetters: string): boolean {
 		if (grid.getLetter(column, row)) return true;

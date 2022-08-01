@@ -109,17 +109,17 @@ function GetPlayGround(allWords: Array<string>): Grid {
     grid.maxX = 0;
 
     var horizontalWord = GetHorizontalWord(allWords);
-    //var horizontalWord = "blodkärl";
+    //var horizontalWord = "svartare";
     //console.log("GetPlayGround");
 
     var vw1 = GetVerticalWord(horizontalWord.charAt(0), horizontalWord, allWords);
     var vw2 = GetVerticalWord(horizontalWord.charAt(2), horizontalWord, allWords);
     var vw3 = GetVerticalWord(horizontalWord.charAt(4), horizontalWord, allWords);
     var vw4 = GetVerticalWord(horizontalWord.charAt(6), horizontalWord, allWords);
-    // var vw1 = "åtbörd";
-    // var vw2 = "tobak";
-    // var vw3 = "förkyld";
-    // var vw4 = "grädde";
+    // var vw1 = "spikar";
+    // var vw2 = "våldta";
+    // var vw3 = "simtag";
+    // var vw4 = "löpare";
 
     var i1 = vw1.indexOf(horizontalWord.charAt(0));
     var i2 = vw2.indexOf(horizontalWord.charAt(2));
