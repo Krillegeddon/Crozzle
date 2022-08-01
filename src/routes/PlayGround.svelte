@@ -2,21 +2,24 @@
 	import { Grid } from '$lib/PlayGround';
 	import { page } from '$app/stores';
 	import { browser, dev, prerendering } from '$app/env';
+	import { onMount } from 'svelte';
 	var grid: Grid;
 	var showHelp = false;
 	var errorMessage = 'Loading2';
 	var gridText: string;
 	var showDebug: boolean = false;
+	var language: string = '';
 
-	async function FetGrid(): Promise<string> {
+	async function FetGrid(lang: string): Promise<any> {
 		try {
-			console.log('FET GRID!');
-			console.log($page.url.href);
+			// console.log('FET GRID!');
+			// console.log($page.url.href);
 			//const f = await fetch('http://localhost:5173/GetPlayground.json', {
 			var url = $page.url.href + 'GetPlayground.json';
 			console.log(url);
 			const f = await fetch(url, {
-				method: 'GET',
+				method: 'POST',
+				body: JSON.stringify({ language: language }),
 				headers: {}
 			});
 
@@ -26,22 +29,45 @@
 			console.log('So you wanna cheat? Well, here is the correct puzzle: :-)');
 			console.log(r.s);
 			gridText = r.s;
-			return r.s;
+			return r;
 		} catch (e) {
 			return 'fel';
 		}
 	}
 
-	async function GetGrid() {
-		console.log('GET GRID (' + browser + ')');
+	var youLost = 'Attans, du förlorade!';
+	var youWon = 'Grattis, du klarade det!';
+	var tryAgainWithSameField = 'Försök igen med samma bräde';
+	var playNewField = 'Spela nytt bräde';
+
+	async function GetGrid(lang: string) {
+		if (!language) return; // language = 'English US';
+		localStorage.setItem('Language', lang);
+
+		if (lang == 'Svenska') {
+			youLost = 'Attans, du förlorade!';
+			youWon = 'Grattis, du klarade det!';
+			tryAgainWithSameField = 'Försök igen med samma bräde';
+			playNewField = 'Spela nytt bräde';
+		}
+
+		if (lang == 'English US') {
+			youLost = 'Dang! You lost!';
+			youWon = 'Congratulations - you made it!';
+			tryAgainWithSameField = 'Try again with same words';
+			playNewField = 'Play new words';
+		}
 
 		//var r = GetPlayground();
-		var r = await FetGrid();
+		var xret = await FetGrid(lang);
+		// console.log('AFTER FET GRID');
+		// console.log(xret);
+		var r = xret.s;
 
-		if (r.length != 420) {
-			errorMessage = 'Something went wrong, try reloading the page';
-			return;
-		}
+		// if (r.length != 420) {
+		// 	errorMessage = 'Something went wrong, try reloading the page';
+		// 	return;
+		// }
 
 		console.log(r.length);
 
@@ -55,6 +81,7 @@
 			}
 			w += '\n';
 		}
+		grid2.validLetters = xret.validLetters;
 		columns = new Array<number>();
 		rows = new Array<number>();
 
@@ -69,7 +96,21 @@
 		errorMessage = '';
 	}
 
-	if (browser) GetGrid();
+	$: GetGrid(language);
+
+	onMount(async () => {
+		if (browser) {
+			if (!language && localStorage) {
+				let l = localStorage.getItem('Language');
+				if (!l) {
+					language = 'English US';
+				} else {
+					language = l;
+				}
+			}
+			//GetGrid(language);
+		}
+	});
 
 	var columns = new Array<number>();
 	var rows = new Array<number>();
@@ -138,15 +179,31 @@
 						/>
 						<path d="M7.001 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0z" />
 					</svg>
+					<br />
+					<select bind:value={language}>
+						<option value={'Svenska'}>Svenska</option>
+						<option value={'English US'}>English US</option>
+					</select>
 				</h1>
 				<div class:hidden={!showHelp}>
-					Välj bokstav för bokstav.<br />
-					Ifall bokstaven ingår, så dyker den upp i korsordet med grön färg.<br />
-					Ifall bokstaven inte ingår, så blir den rödmarkerad.<br />
-					Spelet vinns när alla bokstäver är tagna.<br />
-					Spelet förloras när man har fyra röda!<br /><br />
-					Ha så skoj!<br />
-					<br />
+					{#if language == 'Svenska'}
+						Välj bokstav för bokstav.<br />
+						Ifall bokstaven ingår, så dyker den upp i korsordet med grön färg.<br />
+						Ifall bokstaven inte ingår, så blir den rödmarkerad.<br />
+						Spelet vinns när alla bokstäver är tagna.<br />
+						Spelet förloras när man har fyra röda!<br /><br />
+						Ha så skoj!<br />
+						<br />
+					{/if}
+					{#if language == 'English US'}
+						Select letter by letter<br />
+						In case the letter occurs, it will pop up in the field with green color.<br />
+						In case the letter does not occur, it will be marked in red.<br />
+						Game is won when all letters are taken.<br />
+						Game is lost when there are four red letters!<br /><br />
+						Have fun!<br />
+						<br />
+					{/if}
 				</div>
 
 				<table>
@@ -180,17 +237,20 @@
 				{#if grid.isFailed(grid.selectedLetters)}
 					<div>
 						<br />
-						Attans, du förlorade!<br /><br />
-						<button on:click={() => (grid.selectedLetters = '')}>Spela igen</button>
+						{youLost}<br /><br />
+						<button on:click={() => (grid.selectedLetters = '')}>{tryAgainWithSameField}</button>
+						<br /><br />
+						<button on:click={() => GetGrid(language)}>{playNewField}</button>
 					</div>
 				{/if}
 				{#if grid.isSolved(grid.selectedLetters)}
 					<div>
 						<br />
-						Grattis, du klarade det!<br /><br />
-						<button on:click={() => GetGrid()}>Spela igen</button>
+						{youWon}<br /><br />
+						<button on:click={() => GetGrid(language)}>{playNewField}</button>
 					</div>
 				{/if}
+				<!--
 				<br />
 				<br />
 				<svg
@@ -212,6 +272,7 @@
 						>{gridText.replace('\n', '\r\n')}</textarea
 					>
 				</div>
+			-->
 			</td>
 		</tr>
 	</table>

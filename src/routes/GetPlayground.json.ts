@@ -1,9 +1,10 @@
 import { Grid } from "$lib/PlayGround";
 import { allWordsSE } from "$lib/se";
+import { allWordsEN_US } from "$lib/en_us";
 import type { RequestHandler } from "@sveltejs/kit";
 import fs from 'fs'
 
-const validLetters: string = "abcdefghijklmnopqrstuvwxyzåäö";
+var validLetters: string;
 function IsValidLetter(letter: string): boolean {
     for (var i = 0; i < validLetters.length; i++) {
         if (validLetters.charAt(i).toUpperCase() == letter.toUpperCase()) return true;
@@ -104,9 +105,10 @@ function PutHorizontalWord(word: string, y: number, grid: Grid) {
 }
 
 
-function GetPlayGround(allWords: Array<string>): Grid {
+function GetPlayGround(allWords: Array<string>, validLetters: string): Grid {
     var grid = new Grid();
     grid.maxX = 0;
+    grid.validLetters = validLetters;
 
     var horizontalWord = GetHorizontalWord(allWords);
     //var horizontalWord = "svartare";
@@ -148,14 +150,47 @@ function GetPlayGround(allWords: Array<string>): Grid {
 
 import { browser, dev, prerendering } from '$app/env';
 
-export const GET: RequestHandler = async (event) => {
+export const POST: RequestHandler = async (event) => {
     console.log("Hej " + browser);
+
+    var req = await event.request.json();
+    console.log(req);
+
+    var wl = allWordsSE;
+    if (req.language == "Svenska") {
+        validLetters = "abcdefghijklmnopqrstuvwxyzåäö";
+        wl = allWordsSE;
+    }
+    if (req.language == "English US") {
+        validLetters = "abcdefghijklmnopqrstuvwxyz";
+        wl = allWordsEN_US
+    }
+
+    var resp: Array<any> = [];
+
+    var resp: Array<any> = [];
+
+    // https://www.mit.edu/~ecprice/wordlist.10000
+
+    // console.log("LÄSA FIL!");
+    // var allWordsStr = fs.readFileSync("C:\\_Git\\Crozzle\\src\\lib\\en_us1.txt", "utf-8").toString();
+    // var allWords = allWordsStr.split("\n");
+    // console.log(allWords.length);
+    // var bb = ""
+    // for (var i = 0; i < allWords.length; i++) {
+    //     if (bb != "") bb += ",\n";
+    //     bb += "    \"" + allWords[i].trim() + "\"";
+    // }
+    // bb = "export let allWordsEN_US = [" + bb;
+    // bb += "]";
+    // fs.writeFileSync("C:\\_Git\\Crozzle\\src\\lib\\en_us.ts", bb);
 
 
 
     //while (true) {
     for (var i = 0; i < 1000; i++) {
-        var pg = GetPlayGround(allWordsSE);
+
+        var pg = GetPlayGround(wl, validLetters);
 
         if (pg.maxX <= 0) {
             console.log("KUNDE INTE HITTA");
@@ -170,8 +205,11 @@ export const GET: RequestHandler = async (event) => {
             w += "\n";
         }
 
-        var da = { s: w };
-        console.log("endpoint:" + da.s);
+        console.log(pg.selectedLetters);
+
+        var da = { s: w, validLetters: pg.validLetters };
+        console.log("endpoint:" + JSON.stringify(da));
+        console.log(da.validLetters);
 
         return {
             status: 200,

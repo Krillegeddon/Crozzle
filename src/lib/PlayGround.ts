@@ -3,7 +3,7 @@ export class Grid {
     maxX: number = 0;
     maxY: number = 0;
     correctLetters: string[] = [];
-    validLetters: string = "abcdefghijklmnopqrstuvwxyzåäö";
+    validLetters: string = ""; //"abcdefghijklmnopqrstuvwxyzåäö";
     selectedLetters: string = "";
 
     getValidLetters(): Array<string> {
